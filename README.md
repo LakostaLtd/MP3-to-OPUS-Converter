@@ -1,81 +1,64 @@
-# Audio Tools & File Manager 🎧
+# Audio Tools & Master Manager 🎧
 
-A collection of professional Bash scripts for audio processing (MP3, Opus) and file management on Ubuntu 24.04.
+A collection of professional Bash scripts for audio processing and automation on Ubuntu 24.04. This project now features a "Master Manager" that automates the entire workflow from raw MP3s to a single merged Opus file.
 
-## Tools Overview
+## Key Tools
 
-1.  **mp3_to_opus.sh** — Multithreaded batch converter from MP3 to Opus format.
-2.  **create_file_list.sh** — Advanced file list generator for ffmpeg concat and general use.
-3.  **opus_concat.sh** — Tool for merging multiple Opus files into one.
+### 1. audio_manager.sh (The "All-in-One" Tool)
+This is the main script that combines the logic of conversion, listing, and concatenation into a single pipeline.
 
----
+* **Workflow:**
+    1.  Scans the input directory for MP3 files.
+    2.  Converts them to Opus format using parallel processing (multi-threading).
+    3.  Automatically generates a temporary sort-order list.
+    4.  Merges all parts into one final `.opus` file.
+    5.  Cleans up all intermediate files automatically.
 
-## Detailed Script Documentation
-
-### 1. mp3_to_opus.sh
-Automates conversion with system language detection (EN/RU) and parallel processing.
-
-* **Usage:** `./mp3_to_opus.sh [OPTIONS] <input_directory> <output_directory>`
+* **Usage:**
+    ```bash
+    ./audio_manager.sh [OPTIONS] <input_directory> <output_file.opus>
+    ```
 * **Options:**
-    * `-b <bitrate>` — Set output bitrate (default: `96k`).
-    * `-j <threads>` — Number of parallel jobs (default: CPU core count).
-    * `-r, --recursive` — Process subdirectories recursively.
-    * `-f, --force` — Overwrite existing files in the output folder.
-    * `-d, --delete` — Delete source MP3 files after successful conversion.
-* **Key Features:** Includes disk space checks, error logging, and automatic subdirectory creation in the output path.
+    * `-b, --bitrate` — Set audio quality (e.g., `128k`). Default is `96k`.
+    * `-j, --jobs` — Number of CPU threads to use for conversion.
+    * `-h, --help` — Display help information.
 
 ---
 
-### 2. create_file_list.sh
-Creates a formatted list of files specifically for the `ffmpeg` concat demuxer.
+## Individual Component Scripts
 
-* **Usage:** `./create_file_list.sh [OPTIONS] EXTENSION`
-* **Parameters:**
-    * `EXTENSION` — File extension to search for (e.g., `mp3`). If empty, finds files without extensions.
-* **Options:**
-    * `-s, --sort <TYPE>` — Sort type: `auto` (smart), `name` (alphabetical), `natural` (numeric-aware), `time` (modification date), `size`, or `none`.
-    * `-r, --reverse` — Reverse the sort order.
-    * `-o <FILE>` — Output filename (default: `files.txt`).
-    * `-d <DIR>` — Search directory (default: current directory).
-* **Key Features:** Uses absolute paths and handles special characters in filenames safely for ffmpeg.
+If you need more granular control, you can still use the standalone scripts:
 
----
+### 2. mp3_to_opus.sh
+Batch converter with bilingual support (EN/RU).
+* **Features:** Preserves directory structures and checks for available disk space before starting.
+* **Usage:** `./mp3_to_opus.sh [OPTIONS] <input_dir> <output_dir>`
 
-### 3. opus_concat.sh
-Merges Opus files into a single output file with optional re-encoding.
+### 3. create_file_list.sh
+Generates formatted file lists with advanced sorting capabilities.
+* **Sort Types:** Supports `natural` (numeric), `time`, `size`, and `name` sorting.
+* **Usage:** `./create_file_list.sh -s natural -o my_list.txt mp3`
 
-* **Usage:** `./opus_concat.sh [OPTIONS] [list_file.txt] [output_file.opus]`
-* **Modes:**
-    * `-c, --copy` — (Default) Stream copy mode. Instant merging without quality loss.
-    * `-r, --reencode` — Re-encode to a standard bitrate (useful for mixing different sources).
-* **Parameters:**
-    * `[list_file.txt]` — A text file containing a list of files to merge.
-    * `[output_file.opus]` — Name of the resulting file (default: `result.opus`).
-* **Key Features:** If no list is provided, it automatically gathers and sorts all `.opus` files in the current directory using version-sort (`ls -v`).
+### 4. opus_concat.sh
+Merges existing Opus files either by re-encoding or via instant "stream copy" (no quality loss).
+* **Usage:** `./opus_concat.sh --copy [list.txt] [result.opus]`
 
 ---
 
-## Requirements
+## Technical Requirements
 
-Ensure `ffmpeg` is installed on your system:
+All scripts require `ffmpeg` to be installed:
 ```bash
-
-sudo apt update
-sudo apt install ffmpeg
-
+sudo apt update && sudo apt install ffmpeg
 ```
 
-Installation & Setup
+Installation
 
-Clone the repository.
+ Clone this repository to your Ubuntu machine.
 
- Grant execution permissions to the scripts:
-```bash
+ Make all scripts executable:
+    ```bash
 
-    chmod +x mp3_to_opus.sh create_file_list.sh opus_concat.sh
+        chmod +x *.sh
 
-```
-
-Run the scripts directly from the terminal.
----
-Developed for efficient audio collection (audiobooks) management in the Linux console.
+   ``` 
