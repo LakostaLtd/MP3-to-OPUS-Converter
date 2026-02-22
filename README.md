@@ -1,59 +1,79 @@
-MP3 to Opus Parallel Converter
+# Audio Tools & File Manager 🎧
 
-A powerful and fast Bash script for batch converting MP3 files to Opus format. The key feature is true parallel processing, allowing you to utilize 100% of your CPU power.
-✨ Features
+A collection of professional Bash scripts for audio processing (MP3, Opus) and file management on Ubuntu 24.04.
 
-    🚀 Parallel Processing: Uses xargs -P to run multiple conversions simultaneously, significantly reducing processing time.
+## Tools Overview
 
-    🌍 Smart Localization: Automatically detects system language (English/Russian) for the interface.
+1.  **mp3_to_opus.sh** — Multithreaded batch converter from MP3 to Opus format.
+2.  **create_file_list.sh** — Advanced file list generator for ffmpeg concat and general use.
+3.  **opus_concat.sh** — Tool for merging multiple Opus files into one.
 
-    🛠 Customizable: Easily set custom bitrates, number of threads, and toggle recursive search.
+---
 
-    📂 Structure Preservation: Supports recursive processing while maintaining your original folder hierarchy.
+## Detailed Script Documentation
 
-    💾 Reliability: Built-in disk space check before starting and detailed error logging.
+### 1. mp3_to_opus.sh
+Automates conversion with system language detection (EN/RU) and parallel processing.
 
-    🧹 Optional Cleanup: Can automatically delete source MP3 files only after a successful conversion.
+* **Usage:** `./mp3_to_opus.sh [OPTIONS] <input_directory> <output_directory>`
+* **Options:**
+    * `-b <bitrate>` — Set output bitrate (default: `96k`).
+    * `-j <threads>` — Number of parallel jobs (default: CPU core count).
+    * `-r, --recursive` — Process subdirectories recursively.
+    * `-f, --force` — Overwrite existing files in the output folder.
+    * `-d, --delete` — Delete source MP3 files after successful conversion.
+* **Key Features:** Includes disk space checks, error logging, and automatic subdirectory creation in the output path.
 
-📋 Requirements
+---
 
-Ensure you have the following installed:
+### 2. create_file_list.sh
+Creates a formatted list of files specifically for the `ffmpeg` concat demuxer.
 
-    - bash
+* **Usage:** `./create_file_list.sh [OPTIONS] EXTENSION`
+* **Parameters:**
+    * `EXTENSION` — File extension to search for (e.g., `mp3`). If empty, finds files without extensions.
+* **Options:**
+    * `-s, --sort <TYPE>` — Sort type: `auto` (smart), `name` (alphabetical), `natural` (numeric-aware), `time` (modification date), `size`, or `none`.
+    * `-r, --reverse` — Reverse the sort order.
+    * `-o <FILE>` — Output filename (default: `files.txt`).
+    * `-d <DIR>` — Search directory (default: current directory).
+* **Key Features:** Uses absolute paths and handles special characters in filenames safely for ffmpeg.
 
-    - ffmpeg (compiled with libopus support)
+---
 
-    - findutils (standard on most Linux distributions)
+### 3. opus_concat.sh
+Merges Opus files into a single output file with optional re-encoding.
 
-🚀 Installation & Usage
+* **Usage:** `./opus_concat.sh [OPTIONS] [list_file.txt] [output_file.opus]`
+* **Modes:**
+    * `-c, --copy` — (Default) Stream copy mode. Instant merging without quality loss.
+    * `-r, --reencode` — Re-encode to a standard bitrate (useful for mixing different sources).
+* **Parameters:**
+    * `[list_file.txt]` — A text file containing a list of files to merge.
+    * `[output_file.opus]` — Name of the resulting file (default: `result.opus`).
+* **Key Features:** If no list is provided, it automatically gathers and sorts all `.opus` files in the current directory using version-sort (`ls -v`).
 
-    Download the script and make it executable:
+---
 
-    chmod +x mp3_to_opus.sh
+## Requirements
 
-    Run the conversion:
+Ensure `ffmpeg` is installed on your system:
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
 
-    ./mp3_to_opus.sh [OPTIONS] <input_directory> <output_directory>
+##Installation & Setup
 
-Available Options:
-Option	Description
--b <bitrate>	Set audio bitrate (e.g., 128k). Default is 96k.
--j <threads>	Number of parallel jobs. Defaults to your CPU core count.
--r, --recursive	Search for files in subdirectories recursively.
--f, --force	Overwrite existing files in the output directory.
--d, --delete	Delete the source MP3 file after successful conversion.
--h, --help	Show help message and exit.
+    Clone the repository.
 
-💡 Examples
+    Grant execution permissions to the scripts:
+   ``` Bash
 
-Basic conversion of a single folder:
+    chmod +x mp3_to_opus.sh create_file_list.sh opus_concat.sh
+   ```
 
-./mp3_to_opus.sh ~/Music/MP3_Albums ~/Music/Opus_Library
-
-High-quality recursive conversion with 4 threads and source deletion:
-
-./mp3_to_opus.sh -r -d -j 4 -b 128k ~/Music ~/Music_Opus
-
-📊 Error Logging
-
-If any issues occur during the process, the script generates a log file named conversion_errors_YYYYMMDD_HHMMSS.log in your output directory for easy troubleshooting.
+    Run the scripts directly from the terminal.
+---
+Developed for efficient audio collection (audiobooks) management in the Linux console.
+Developed for efficient audio collection management in the Linux console.
