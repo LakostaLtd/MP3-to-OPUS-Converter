@@ -59,21 +59,23 @@ Merges Opus files into a single output file with optional re-encoding.
 
 Ensure `ffmpeg` is installed on your system:
 ```bash
+
 sudo apt update
 sudo apt install ffmpeg
+
 ```
 
-##Installation & Setup
+Installation & Setup
 
-    Clone the repository.
+Clone the repository.
 
-    Grant execution permissions to the scripts:
-   ``` Bash
+ Grant execution permissions to the scripts:
+```bash
 
     chmod +x mp3_to_opus.sh create_file_list.sh opus_concat.sh
-   ```
 
-    Run the scripts directly from the terminal.
+```
+
+Run the scripts directly from the terminal.
 ---
 Developed for efficient audio collection (audiobooks) management in the Linux console.
-Developed for efficient audio collection management in the Linux console.
